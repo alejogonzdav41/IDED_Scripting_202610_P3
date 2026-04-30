@@ -1,16 +1,14 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
 public class Player : MonoBehaviour
 {
     public const int PLAYER_LIVES = 3;
-
     public const float PLAYER_RADIUS = 0.4F;
 
     private static Player instance;
-
-    #region StatsProperties
 
     [SerializeField]
     private Transform bulletSpawnPoint;
@@ -22,10 +20,12 @@ public class Player : MonoBehaviour
 
     public Transform BulletSpawnPoint => bulletSpawnPoint;
 
-    #endregion StatsProperties
-
     private MovementCommand movementCommand;
+
     private ShootCommand shootCommand;
+    private ICommand currentShootCommand;
+
+    private Coroutine tripleShootCoroutine;
 
     public Action OnPlayerDied;
     public Action OnPlayerHit;
@@ -44,7 +44,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
     private void Start()
     {
         Lives = PLAYER_LIVES;
@@ -55,6 +54,8 @@ public class Player : MonoBehaviour
 
         movementCommand = gameObject.GetComponent<MovementCommand>();
         shootCommand = gameObject.GetComponent<ShootCommand>();
+
+        currentShootCommand = new NormalShootDecorator(shootCommand);
     }
 
     private void PlayerHit()
@@ -67,11 +68,13 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void AddScore(int scoreAdd) => Score += scoreAdd;
+    private void AddScore(int scoreAdd)
+    {
+        Score += scoreAdd;
+    }
 
     private void PlayerDied()
     {
-        //OnPlayerDied -= PlayerDied;
         OnPlayerDied = null;
         OnPlayerHit = null;
         Target.onTargetDestroyed -= AddScore;
@@ -80,23 +83,44 @@ public class Player : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    // Update is called once per frame
     private void Update()
     {
         HVal = Input.GetAxis("Horizontal");
 
         if (HVal != 0F)
         {
-            //if (movementCommand != null)
-            //{
-            //    movementCommand.Execute();
-            //}
             movementCommand?.Execute();
         }
 
         if (Input.GetButtonDown("Fire1"))
         {
-            shootCommand?.Execute();
+            currentShootCommand?.Execute();
         }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            ActivateTripleShoot(5f);
+        }
+    }
+
+    public void ActivateTripleShoot(float duration)
+    {
+        if (tripleShootCoroutine != null)
+        {
+            StopCoroutine(tripleShootCoroutine);
+        }
+
+        tripleShootCoroutine = StartCoroutine(TripleShootRoutine(duration));
+    }
+
+    private IEnumerator TripleShootRoutine(float duration)
+    {
+        currentShootCommand = new TripleShootDecorator(shootCommand, this);
+
+        yield return new WaitForSeconds(duration);
+
+        currentShootCommand = new NormalShootDecorator(shootCommand);
+
+        tripleShootCoroutine = null;
     }
 }
