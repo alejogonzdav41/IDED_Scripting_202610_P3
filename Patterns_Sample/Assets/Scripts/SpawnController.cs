@@ -10,10 +10,9 @@ public class SpawnController : MonoBehaviour
 
     private Vector3 spawnPoint;
 
-    // Start is called before the first frame update
     private void Start()
     {
-        if (TargetFactory.Instance != null)
+        if (TargetFacade.Instance != null)
         {
             InvokeRepeating("SpawnObject", firstSpawnDelay, spawnRate);
 
@@ -26,7 +25,7 @@ public class SpawnController : MonoBehaviour
 
     private void SpawnObject()
     {
-        GameObject spawnGO = TargetFactory.Instance.CreateInstance().gameObject;
+        GameObject spawnGO = TargetFacade.Instance.CreateInstance().gameObject;
 
         if (spawnGO != null)
         {

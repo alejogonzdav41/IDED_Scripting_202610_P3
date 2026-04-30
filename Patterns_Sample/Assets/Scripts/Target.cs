@@ -13,14 +13,29 @@ public class Target : MonoBehaviour, IFactoryProduct
     [SerializeField]
     private int scoreAdd = 10;
 
+    private TargetPoolBase pool;
+
+    private bool alreadyReturned;
+
     public delegate void OnTargetDestroyed(int scoreAdd);
 
     public static event OnTargetDestroyed onTargetDestroyed;
 
-    private void Start()
+    public void SetPool(TargetPoolBase targetPool)
     {
+        pool = targetPool;
+    }
+
+    public void ResetTarget()
+    {
+        CancelInvoke("ReturnToPool");
+
         currentHP = maxHP;
-        Destroy(gameObject, TIME_TO_DESTROY);
+        alreadyReturned = false;
+
+        gameObject.SetActive(true);
+
+        Invoke("ReturnToPool", TIME_TO_DESTROY);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -36,13 +51,34 @@ public class Target : MonoBehaviour, IFactoryProduct
             if (currentHP <= 0)
             {
                 onTargetDestroyed?.Invoke(scoreAdd);
-                Destroy(gameObject);
+                ReturnToPool();
             }
         }
         else if (collidedObjectLayer.Equals(Utils.PlayerLayer) ||
             collidedObjectLayer.Equals(Utils.KillVolumeLayer))
         {
             Player.Instance.OnPlayerHit?.Invoke();
+            ReturnToPool();
+        }
+    }
+
+    private void ReturnToPool()
+    {
+        if (alreadyReturned)
+        {
+            return;
+        }
+
+        alreadyReturned = true;
+
+        CancelInvoke("ReturnToPool");
+
+        if (pool != null)
+        {
+            pool.ReturnTarget(this);
+        }
+        else
+        {
             Destroy(gameObject);
         }
     }

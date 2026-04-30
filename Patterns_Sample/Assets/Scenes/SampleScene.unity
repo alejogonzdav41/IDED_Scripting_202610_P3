@@ -675,6 +675,57 @@ LightingSettings:
   m_PVRFilteringAtrousPositionSigmaIndirect: 2
   m_PVRFilteringAtrousPositionSigmaAO: 1
   m_RespectSceneVisibilityWhenBakingGI: 0
+--- !u!1 &316180017
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 316180019}
+  - component: {fileID: 316180018}
+  m_Layer: 0
+  m_Name: TargetFacade
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &316180018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 316180017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d47f340fb31fbb4cad67f10232a72d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TargetFacade
+  normalTargetPrefab: {fileID: 2627135051368097642, guid: a57facc0ab4ba144e8a7de39761c5d6e,
+    type: 3}
+  fastTargetPrefab: {fileID: 2627135051368097642, guid: b5f0d6b4e9ba9704a9e36c5bac0a930b,
+    type: 3}
+  strongTargetPrefab: {fileID: 2627135051368097642, guid: 66c2fad4b964999488879a54fc3c5564,
+    type: 3}
+  poolSize: 5
+--- !u!4 &316180019
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 316180017}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.04346, y: -8.56, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &417724104
 GameObject:
   m_ObjectHideFlags: 0
@@ -1817,3 +1868,4 @@ SceneRoots:
   - {fileID: 1134325182}
   - {fileID: 148556494}
   - {fileID: 911879819}
+  - {fileID: 316180019}
